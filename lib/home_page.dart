@@ -25,6 +25,15 @@ class _HomePageState extends State<HomePage> {
     // allFilesAndFolders = data;
   }
 
+  String totalSize() {
+    dynamic size = 0;
+    allFilesAndFolders.forEach((element) {
+      size += element['size'];
+    });
+    size = size ~/ 1024;
+    return size.toString() + ' MB';
+  }
+
   checkInternetConnection() async {
     bool result = await DataConnectionChecker().hasConnection;
     if (result == true) {
@@ -49,7 +58,37 @@ class _HomePageState extends State<HomePage> {
               leading: null,
               backgroundColor: Colors.black87,
               title: Text('Photos'),
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.refresh),
+                    onPressed: () {
+                      // print('Home Page Refresh Button Tapped');
+                      HomePage(arguments);
+                    })
+              ],
             ),
+            bottomNavigationBar: Container(
+                height: 50.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Icon(Icons.info_outline, color: Colors.blue)),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Text(
+                      'Folders - ${allFilesAndFolders.length.toString()}',
+                      style: TextStyle(fontFamily: 'Circular Std Black'),
+                    )),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Text(
+                      'Size - ${totalSize()}',
+                      style: TextStyle(fontFamily: 'Circular Std Black'),
+                    )),
+                  ],
+                )),
             body: GridView.builder(
               itemCount: allFilesAndFolders.length,
               gridDelegate:

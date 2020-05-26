@@ -45,13 +45,42 @@ class _GalleryState extends State<Gallery> {
               leading: null,
               backgroundColor: Colors.black87,
               title: Text('${folder["name"]}'),
-            ),
+               actions: <Widget>[
+                IconButton(icon: Icon(Icons.refresh), onPressed: () {
+                  // print('Gallery Refresh Button Tapped');
+                  Gallery(arguments);
+                })
+              ],
+            ),bottomNavigationBar: Container(
+                height: 50.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Icon(Icons.info_outline, color: Colors.blue)),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Text(
+                      'Total Images - ${folder["files"].length.toString()}',
+                      style: TextStyle(fontFamily: 'Circular Std Black'),
+                    )),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                        child: Text(
+                      'Size - ${(folder["size"] ~/ 1024).toString()} MB',
+                      style: TextStyle(fontFamily: 'Circular Std Black'),
+                    )),
+                  ],
+                )),
             body: GridView.builder(
               itemCount: folder['files'].length,
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (BuildContext context, int index) {
-                all_photos.add(folder["files"][index]["url"]);
+                if (!all_photos.contains(folder['files'][index]['url'])) {
+                  all_photos.add(folder["files"][index]["url"]);
+                }
                 return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, 'photo',

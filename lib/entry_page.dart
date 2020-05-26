@@ -23,7 +23,7 @@ class _EntryPage extends State<EntryPage> {
 
   Future getData() async {
     var response = await http.get(Uri.encodeFull(
-        'https://fd74ht778g.execute-api.ap-south-1.amazonaws.com/dev/get-folders-and-files-list'));
+        'https://06v3s5c65b.execute-api.ap-south-1.amazonaws.com/prod/get-folders-and-files-list'));
     // var data = json.decode(response.body);
     print(response.body);
     allFilesAndFolders = response.body;

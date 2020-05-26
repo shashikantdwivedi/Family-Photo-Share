@@ -19,8 +19,12 @@ class _PhotoViewerState extends State<PhotoViewer> {
   var all_urls;
   var current_url;
   var current_index;
-  final snackBar = SnackBar(
+  final snackBarDownloadComplete = SnackBar(
     content: Text('Download Complete'),
+    backgroundColor: Colors.green,
+  );
+  final snackBarDownloadStarted = SnackBar(
+    content: Text('Download Started'),
     backgroundColor: Colors.blue,
   );
   var internetStatus = true;
@@ -58,9 +62,16 @@ class _PhotoViewerState extends State<PhotoViewer> {
               leading: null,
               backgroundColor: Colors.black,
               title: Text('${all_urls[current_index].split("/").last}'),
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.refresh), onPressed: () {
+                  // print('Photo Viewer Refresh Button Tapped');
+                  PhotoViewer(arguments);
+                })
+              ],
             ),
             floatingActionButton: FloatingActionButton(
                 onPressed: () async {
+                  globalKey.currentState.showSnackBar(snackBarDownloadStarted);
                   try {
                     // Saved with this method.
                     var imageId = await ImageDownloader.downloadImage(
@@ -68,7 +79,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                             destination: AndroidDestinationType.custom(
                                 directory: 'Family Photo Group'))
                         .whenComplete(() =>
-                            {globalKey.currentState.showSnackBar(snackBar)});
+                            {globalKey.currentState.showSnackBar(snackBarDownloadComplete)});
                     if (imageId == null) {
                       return;
                     }
@@ -86,8 +97,10 @@ class _PhotoViewerState extends State<PhotoViewer> {
             body: SwipeDetector(
                 onSwipeLeft: () {
                   if (current_index < all_urls.length - 1) {
-                    print(all_urls.length);
-                    print(current_index);
+                    // print('Left Swiped');
+                    // print('All URL Length - ${all_urls.length}');
+                    // print(all_urls);
+                    // print('Current Index - $current_index');
                     setState(() {
                       current_index++;
                     });
@@ -95,8 +108,9 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 },
                 onSwipeRight: () {
                   if (current_index > 0) {
-                    print(all_urls.length);
-                    print(current_index);
+                    // print('Right Swiped');
+                    // print('All URL Length - ${all_urls.length}');
+                    // print('Current Index - $current_index');
                     setState(() {
                       current_index--;
                     });
